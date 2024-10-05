@@ -86,9 +86,9 @@ class IndexController extends Controller
             return response()->json(['success' => false, 'message' => 'No data found!!']);
         }
 
-        $existingData[$validated['index']-1]['name'] = $validated['name'];
-        $existingData[$validated['index']-1]['quantity'] = $validated['quantity'];
-        $existingData[$validated['index']-1]['price'] = $validated['price'];
+        $existingData[$validated['index']]['name'] = $validated['name'];
+        $existingData[$validated['index']]['quantity'] = $validated['quantity'];
+        $existingData[$validated['index']]['price'] = $validated['price'];
 
         Storage::put($filePath, json_encode($existingData, JSON_PRETTY_PRINT));
 

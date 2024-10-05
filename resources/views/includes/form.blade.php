@@ -52,9 +52,7 @@
                 if (data.success) {
                     let tableBody = document.querySelector('tbody');
 
-                    let lastChild = tableBody.lastElementChild.querySelector("td:last-child");
-                    let lastChildValue = Number(lastChild.innerHTML);
-                    lastChild.innerHTML = lastChildValue + (data.product.quantity * data.product.price);
+
 
                     let newRow = document.createElement('tr');
                     let createdAt = data.product.created_at;
@@ -77,16 +75,33 @@
                 <td>${data.product.quantity * data.product.price}</td>
                 <td>
                     <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#updateModal"
-                        data-index="${data.index}" data-name="${data.product.name}" 
+                        data-index="${data.index-1}" data-name="${data.product.name}" 
                         data-quantity="${data.product.quantity}" data-price="${data.product.price}">
                         Update
                     </button>
                 </td>
             `;
-                    if (tableBody.firstChild != null)
-                        tableBody.insertBefore(newRow, tableBody.firstChild);
-                    else
-                        tableBody.innerHTML = newRow;
+            // console.log(tableBody.childElementCount == 1);
+            
+                    if (tableBody.childElementCount > 1) {
+                        
+                        let lastChild = tableBody.lastElementChild.querySelector("td:last-child");
+                        let lastChildValue = Number(lastChild.innerHTML);
+                        lastChild.innerHTML = lastChildValue + (data.product.quantity * data.product.price);
+                        tableBody.insertBefore(newRow, tableBody.firstElementChild);
+                    } else {
+                        console.log("It's working");
+                        let lastChild = document.createElement('tr');
+                        lastChild.innerHTML = `
+                            <td colspan="4">Total Value numbers: </td>
+                            <td colspan="2">${data.product.quantity * data.product.price}</td>
+                            `;
+                            console.log(lastChild);
+                            
+                            tableBody.innerHTML = "";
+                            tableBody.appendChild(newRow);
+                            tableBody.appendChild(lastChild);
+                    }
                     document.querySelector('#form-response').innerHTML =
                         '<div class="alert alert-success">' + data.message + '</div>';
                     this.reset();
